@@ -1,13 +1,21 @@
 package gal.mosaee.galstock.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "items")
+@ApiModel(description = "Details about the item")
 public class Item {
+    @ApiModelProperty(notes = "The unique Id of the item")
     private long id;
+    @ApiModelProperty(notes = "The unique name of the item")
     private String name;
+    @ApiModelProperty(notes = "The amount of the item")
     private int amount;
+    @ApiModelProperty(notes = "The unique inventory code of the item")
     private String inventoryCode;
 
     public Item() {

@@ -1,7 +1,7 @@
 package gal.mosaee.galstock;
 
 import gal.mosaee.galstock.model.Item;
-import gal.mosaee.galstock.repository.ItemRespository;
+import gal.mosaee.galstock.repository.ItemRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,11 +20,14 @@ public class GalStockApplication {
 	}
 
 	@Bean
-	CommandLineRunner runner(ItemRespository respository){
+	CommandLineRunner runner(ItemRepository repository){
 		return args -> {
-			respository.save(new Item("Glasses", 5, "abcd"));
-			respository.save(new Item("Doll", 2, "abce"));
-			respository.save(new Item("Bicycle", 3, "abcf"));
+			repository.save(new Item("Glasses", 5, "abcd"));
+			repository.save(new Item("Doll", 2, "abce"));
+			repository.save(new Item("Bicycle", 3, "abcf"));
+			repository.save(new Item("Pants", 4, "abcg"));
+			repository.save(new Item("Picture", 1, "abch"));
+			repository.save(new Item("Mirror", 3, "abci"));
 		};
 	}
 

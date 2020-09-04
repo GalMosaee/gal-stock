@@ -1,4 +1,4 @@
-FROM openjdk:8
-EXPOSE 3000
-ADD target/gal-stock.jar gal-stock.jar
-ENTRYPOINT ["java","-jar","/gal-stock.jar"]
+FROM openjdk:8-jdk-alpine
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} app.jar
+ENTRYPOINT ["java","-jar","/app.jar"]

@@ -1,7 +1,7 @@
 package gal.mosaee.galstock.controller;
 
 import gal.mosaee.galstock.model.Item;
-import gal.mosaee.galstock.repository.ItemRespository;
+import gal.mosaee.galstock.repository.ItemRepository;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +17,13 @@ import java.util.Optional;
 @RequestMapping("/stock")
 public class StockController {
     @Autowired
-    private ItemRespository itemRespository;
+    private ItemRepository itemRepository;
 
     @GetMapping("/items")
     @ApiOperation(value = "Return all items",
                   notes = "Return all the items exist in the stock.")
     public List<Item> getAllItems() {
-        return this.itemRespository.findAll();
+        return this.itemRepository.findAll();
     }
 
     @GetMapping("/items/{id}")
@@ -31,7 +31,7 @@ public class StockController {
             notes = "Return a specific item by its id.")
     public ResponseEntity<Item> getItemById(@ApiParam(value = "Item Id to retrieve.",required = true)
             @PathVariable(value = "id") Long itemId) {
-        Optional<Item> item = this.itemRespository.findById(itemId);
+        Optional<Item> item = this.itemRepository.findById(itemId);
         if (item.isPresent()){
             return new ResponseEntity<Item>(item.get(), HttpStatus.OK);
         }
@@ -46,8 +46,8 @@ public class StockController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Amount must be non-negative number!");
         }
-        Item createdItem = itemRespository.save(item);
-        return new ResponseEntity<>(createdItem,HttpStatus.OK);
+        Item createdItem = itemRepository.save(item);
+        return new ResponseEntity<>(createdItem,HttpStatus.CREATED);
     }
 
     @PutMapping("/items/withdrawal/{id}/{amount}")
@@ -57,7 +57,7 @@ public class StockController {
             @PathVariable(value = "id") long itemId,
             @ApiParam(value = "Amount to withdraw.\nMust be positive number",required = true)
             @PathVariable(value = "amount") int itemAmount){
-        Optional<Item> item = this.itemRespository.findById(itemId);
+        Optional<Item> item = this.itemRepository.findById(itemId);
         if(item.isPresent()){
             int calculatedAmount = item.get().getAmount()-itemAmount;
             if(itemAmount<1){
@@ -70,7 +70,7 @@ public class StockController {
             }
             Item updatedItem = item.get();
             updatedItem.setAmount(updatedItem.getAmount()-itemAmount);
-            itemRespository.save(updatedItem);
+            itemRepository.save(updatedItem);
             return new ResponseEntity<Item>(updatedItem, HttpStatus.OK);
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Item Id doesn't exist!");
@@ -79,11 +79,11 @@ public class StockController {
     @PutMapping("/items/deposit/{id}/{amount}")
     @ApiOperation(value = "Increase the amount of an item in stock",
             notes = "Increase the amount of an item in stock.")
-    public ResponseEntity<Item> depositItem(@ApiParam(value = "Item Id to withdraw.",required = true)
+    public ResponseEntity<Item> depositItem(@ApiParam(value = "Item Id to deposit.",required = true)
             @PathVariable(value = "id") long itemId,
             @ApiParam(value = "Amount to deposit.\nMust be positive number",required = true)
             @PathVariable(value = "amount") int itemAmount){
-        Optional<Item> item = this.itemRespository.findById(itemId);
+        Optional<Item> item = this.itemRepository.findById(itemId);
         if(item.isPresent()){
             int calculatedAmount = item.get().getAmount()+itemAmount;
             if(itemAmount<1){
@@ -94,7 +94,7 @@ public class StockController {
             }
             Item updatedItem = item.get();
             updatedItem.setAmount(calculatedAmount);
-            itemRespository.save(updatedItem);
+            itemRepository.save(updatedItem);
             return new ResponseEntity<Item>(updatedItem, HttpStatus.OK);
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Item Id doesn't exist!");
@@ -105,9 +105,9 @@ public class StockController {
             notes = "Delete an item from stock.")
     public ResponseEntity<Item> deleteItem(@ApiParam(value = "Item Id to retrieve.",required = true)
             @PathVariable(value = "id") long itemId){
-        Optional<Item> item = this.itemRespository.findById(itemId);
+        Optional<Item> item = this.itemRepository.findById(itemId);
         if (item.isPresent()){
-            itemRespository.delete(item.get());
+            itemRepository.delete(item.get());
             return new ResponseEntity<Item>(item.get(), HttpStatus.OK);
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Item Id doesn't exist!");

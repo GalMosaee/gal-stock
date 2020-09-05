@@ -14,13 +14,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-//@WebMvcTest(controllers = StockController.class)
 class StockControllerIntTest {
 
     @Autowired
     private MockMvc mvc;
 
-    //@MockBean
     @Autowired
     private ItemRepository itemsRepository;
 
